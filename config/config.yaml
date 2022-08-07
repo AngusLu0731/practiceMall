@@ -1,0 +1,35 @@
+appName : practiceMall
+httpPort : 8080
+runMode : dev
+adminPath: backend
+excludeAuthPath: /,/welcome,/login/loginout
+#配置session
+sessionOn: true
+sessionGCMaxLifetime: 3600
+sessionName:
+#配置網站domain
+#domain: 127.0.0.1
+#如果是docker-compose執行，則設置為mysqlServiceHost
+domain: mysqlServiceHost
+#配置MYSQL數據
+mysqlAdmin: root
+mysqlPwd: root
+mysqldb: practiceMall
+mysqlPort: 3306
+mysqlHost: localhost
+
+
+#ossDomin:"http://oss-cn-shanghai.aliyuncs.com"
+#ossStatus:false
+resizeImageSize: [200,400]
+enableRedis: yes
+#配置Redis數據
+#redisConn: localhost:6379
+#如果是docker-compose執行，則設置為redisServiceHost
+redisConn: redisServiceHost:6379
+redisPwd: root
+redisTime: 3600
+
+#為response設置安全cookie
+secureCookie: least123
+copyRequestBody : true

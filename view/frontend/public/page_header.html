@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="author" content="created by shirdon"/>
+    <title>練習商城</title>
+    <link rel="stylesheet"
+          type="text/css" href="/static/frontend/css/style.css">
+    <link rel="stylesheet" href="/static/frontend/css/swiper.min.css">
+    <script src="/static/frontend/js/jquery-1.10.1.js"></script>
+    <script src="/static/frontend/js/swiper.min.js"></script>
+    <script src="/static/frontend/js/base.js"></script>
+</head>
+<body>
+<!-- start header -->
+<header>
+    <div class="top center">
+        <div class="left fl">
+            <ul>
+            {{range $key,$value := .topMenuList}}
+                <li><a href="{{$value.Link}}"
+                {{if eq $value.IsOpennew 2}} target="_blank" {{end}}>{{$value.Title}}</a>
+                </li>
+            {{end}}
+                <div class="clear"></div>
+            </ul>
+        </div>
+        <div class="right fr">
+            <div class="cart fr"><a href="/cart">购物车</a>
+            </div>
+            <div class="fr">
+            {{ if eq .userinfo "null" }}
+                <ul>
+                <li><a href="/auth/login" target="_blank">登入</a></li>
+                <li>|</li>
+                <li><a href="/auth/registerStep1" target="_blank" >註冊</a></li>
+                </ul>
+            {{ else }}
+                <ul>
+                    <li class="userinfo">
+                        <a href="#">{{ .userinfo }}</a>
+                        <i class="i"></i>
+                        <ol>
+                            <li><a href="/user">會員中心</a></li>
+                            <li><a href="#">我的收藏</a></li>
+                            <li><a href="/auth/loginOut">登出</a></li>
+                        </ol>
+                    </li>
+                </ul>
+            {{ end }}
+            </div>
+            <div class="clear"></div>
+        </div>
+        <div class="clear"></div>
+    </div>
+</header>
+<!--end header -->
+

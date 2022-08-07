@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>用戶註冊</title>
+    <link rel="stylesheet" href="/static/frontend/css/login.css"/>
+    <script src="/static/frontend/js/jquery-1.10.1.js"></script>
+</head>
+<body class="register_page">
+<div class="regist">
+    <div class="regist_center">
+        <div class="logo">
+            <img src="/static/frontend/image/logo_top.png" alt="My Go Mall">
+        </div>
+        <div class="regist_top">
+            <h2>註冊帳戶</h2>
+        </div>
+        <div class="regist_main center">
+            <p>驗證碼已發送至：{{.phone}}(測試版本統一為5259)</p>
+            <br>
+            <br>
+            <div class="error"></div>
+            <input type="hidden" id="phone" name="phone" value="{{.phone}}"/>
+            <input type="hidden" id="phone_code" name="phone_code" value="{{.phone_code}}"/>
+            <input type="hidden" id="sign" name="sign" value="{{.sign}}"/>
+            <div class="yzm">
+                <input type="text" id="sms_code" name="sms_code" placeholder="請輸入驗證碼"/>
+                <button id="sendCode">重新發送</button>
+            </div>
+            <div class="regist_submit">
+                <input class="submit" id="nextStep" type="button" name="submit" value="下一步">
+                <br>
+                <input class="return" id="returnButton" type="button" name="return" value="返回">
+            </div>
+        </div>
+        <script>
+            $(function () {
+                var timer = 10;
+
+                function Countdown() {
+                    if (timer >= 1) {
+                        timer -= 1;
+                        $("#sendCode").attr('disabled', true);
+                        $("#sendCode").html('重新发送(' + timer + ')');
+                        setTimeout(function () {
+                            Countdown();
+                        }, 1000);
+                    } else {
+                        $("#sendCode").attr('disabled', false)
+
+                        $("#sendCode").html('重新发送');
+                    }
+                }
+
+                //发送验证码
+                Countdown();
+                $("#sendCode").click(function () {
+                    $(".error").html("")
+                    timer = 10
+                    Countdown();
+                    var phone = $("#phone").val()
+                    var phone_code = $("#phone_code").val()
+                    var phoneCodeId = "resend"
+                    // alert('重新发送');
+                    $.get('/auth/sendCode', {
+                        phone: phone,
+                        phone_code: phone_code,
+                        phoneCodeId: phoneCodeId
+                    }, function (response) {
+                        console.log(response)
+                        if (response.success != true) {
+                            //改变验证码
+                            $(".error").html("Error：" + response.msg + ",请重新输入!")
+                        }
+                    })
+                })
+            })
+            //验证验证码
+            $(function () {
+                $("#nextStep").click(function (e) {
+                    var sign = $('#sign').val();
+                    var sms_code = $('#sms_code').val();
+                    $.get('/auth/validateSmsCode', {sign: sign, sms_code: sms_code}, function (response) {
+                        if (response.success == true) {
+                            location.href = "/auth/registerStep3?sign=" + sign + "&sms_code=" + sms_code
+                        } else {
+                            $(".error").html("Error：" + response.msg)
+                        }
+                    })
+                })
+            })
+        </script>
+    </div>
+</div>
+</body>
+
+</html>

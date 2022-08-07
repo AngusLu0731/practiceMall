@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>用戶註冊</title>
+    <link rel="stylesheet" href="/static/frontend/css/login.css"/>
+    <script src="/static/frontend/js/jquery-1.10.1.js"></script>
+</head>
+<body class="register_page">
+<div class="regist">
+    <div class="regist_center">
+        <div class="logo">
+            <img src="/static/frontend/image/logo_top.png" alt="My Go Mall">
+        </div>
+        <div class="regist_top">
+            <h2>註冊帳戶</h2>
+        </div>
+        <div class="regist_main center">
+            <input class="form_input" type="text" name="phone" id="phone" placeholder="請輸入手機號碼"/>
+            <div class="yzm">
+                <input type="text" id="phone_code" name="phone_code" placeholder="請輸入手機驗證碼"/>
+                <img name="captcha_id" id="captcha_id" src="/captcha" onclick="this.src='/captcha?v='+Math.random()">
+            </div>
+            <div class="error"></div>
+            <div class="regist_submit">
+                <button class="submit" id="registerButton">
+                    立即註冊
+                </button>
+            </div>
+            <br>
+            <br>
+            <div class="privacy_box">
+                <div class="msg">
+                    <label class="n_checked now select-privacy">
+                        <input type="checkbox" checked="true"/> 註冊帳號即表示您同意我們的用戶協議及隱私政策 <a
+                            href="https://www.shirdon.com/leastmall/agreement/account/cn.html"
+                            class="inspect_link " title="用户协议" target="_blank">用戶協議</a>和<a
+                            href="https://www.shirdon.com/about/privacy/" class="inspect_link privacy_link"
+                            title=" 隐私政策 " target="_blank"> 隱私政策 </a>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {
+        //发送验证码
+        $("#registerButton").click(function () {
+            //验证验证码是否正确
+            var phone = $('#phone').val();
+            var phone_code = $('#phone_code').val();
+            var reg = /^[\d]{10}$/;
+            if (!reg.test(phone)) {
+                $(".error").html("Error：手机号输入错误");
+                return false;
+            }
+            if (phone_code.length < 4) {
+                $(".error").html("Error：图形验证码长度不合法")
+                return false;
+            }
+            console.log("123123123123")
+            $.get('/auth/sendCode', {
+                phone: phone,
+                phone_code: phone_code,
+            }, function (response) {
+                console.log(response)
+                if (response.success == true) {
+                    //跳转到下页面
+                    location.href = "/auth/registerStep2?sign=" + response.sign + "&phone_code=" + phone_code;
+                } else {
+                    $(".error").html("Error：" + response.msg + ",请重新输入!")
+                    document.getElementById("captcha_id").src = '/captcha?v='+Math.random()
+                }
+            })
+        })
+    })
+</script>
+</body>
+</html>
